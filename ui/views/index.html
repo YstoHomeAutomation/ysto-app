@@ -15,138 +15,19 @@
 </head>
 
 <body>
-    <div class="container">
-        <div class="row" style="margin-top: 10%">
-            <a id="homeStart" href="" style="text-decoration: none;"><h4>Ysto Home Automation</h4></a>
+    <div id="app">
+        <div class="container">
+            <div class="row" style="margin-top: 10%">
+                <a href="#" style="text-decoration: none;" @click="currentView='dash'"><h4>Ysto Home Automation</h4></a>
+            </div>
+            <hr>
+                <component :is="currentView"></component>
+            <hr>
+            <p style="text-align: center">&copy; 2017 Fabiano da Rosa Gomes</p>
         </div>
-        <hr>
-        <div id="app"></div>
-        <hr>
-        <p style="text-align: center">&copy; 2017 Fabiano da Rosa Gomes</p>
     </div>
 
-    <!-- Templates a partir daqui -->
-    
-    <script id="tpl-login" type="x-template/underscore">
-      <div class="row"">
-        <h5>Login</h5>
-      </div>
-      <form>
-        <div class="row">
-          <div class="six columns">
-            <label for="EmailInput">Your email</label>
-            <input class="u-full-width" type="email" placeholder="test@mailbox.com" id="EmailInput">
-           </div>
-          <div class="six columns">
-            <label for="PasswordInput">Password</label>
-            <input class="u-full-width" type="password" id="PasswordInput">
-            <input id="loginButton" class="button-primary u-full-width" type="submit" value="Login">
-          </div>
-        </div>
-      </form>
-    </script><!-- fim login -->
-    
-    <script id="tpl-dashboard" type="x-template/underscore">
-        <div id="content">
-          <div class="row">
-              <h5>Dashboard</h5>
-          </div>
-            <div class="row">
-              <div class="one-third column" >
-                <a class="button button-primary u-full-width" id="new-user" href="#new-user">New user</a>
-              </div>
-              <div class="one-third column">
-                <a class="button button-primary u-full-width" id="new-device" href="#new-device">New device</a>
-              </div>
-              <div class="one-third column">
-                <a class="button button-primary u-full-width" id="devices" href="#list-devices">Devices</a>
-              </div>
-          </div>
-          <div class="row">
-              <div class="one-third column">
-                <a class="button u-full-width" id="logout" href="#">Logout</a>
-              </div>
-          </div>
-        </div>
-    </script><!-- fim dashboard -->
-
-    <script id="tpl-new-users" type="x-template/underscore">
-      <div class="row">
-          <h5>New User</h5>
-      </div>
-      <form>
-        <div class="row">
-          <div class="one-half column">
-            <label for="EmailInput">Your email</label>
-            <input class="u-full-width" type="email" placeholder="your email" id="EmailInput">
-          </div>
-          <div class="one-half column">
-            <label for="PasswordInput">Password</label>
-            <input class="u-full-width" type="password" id="PasswordInput">
-            <input class="button-primary u-full-width" type="submit" value="Save">
-            <input class="button u-full-width" type="submit" value="Logout">
-          </div>
-        </div>
-      </form>
-    </script><!-- fim new users -->
-
-    <script id="tpl-new-devices" type="x-template/underscore">
-      <div class="row">
-        <h5>New Device</h5>
-      </div>
-      <form>
-        <div class="row">
-          <div class="two-thirds column">
-            <label for="NamelInput">Device name</label>
-            <input class="u-full-width" type="text" placeholder="Ex. MA006" id="NamelInput">
-           </div>
-          <div class="one-third column">
-            <input class="button-primary u-full-width" type="submit" value="Save">
-            <input class="button u-full-width" type="submit" value="Logout">
-          </div>
-        </div>
-      </form>
-    </script><!-- fim new devices -->
-
-    <script id="tpl-list-devices" type="x-template/underscore">
-      <div class="row">
-      <h5>Device(s)</h5>
-      </div>
-      <div class="row">
-          <table class="u-full-width">
-            <thead>
-              <tr>
-                <th>Device</th>
-                <th>Status</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>MA001</td>
-                <td>ONLINE</td>
-                <td><a class="button button-primary" href="#">Switch</a></td>
-              </tr>
-              <tr>
-                <td>MA003</td>
-                <td>OFFLINE</td>
-                <td><a class="button button" href="#">Switch</a></td>
-              </tr>
-            </tbody>
-          </table>
-      </div>
-      <div class="row">
-        <div class="one-third column">
-          <input class="button u-full-width" type="submit" value="Logout">
-        </div>
-      </div>
-    </script><!-- fim list-devices -->
-
-    <script src="static/lib/jquery.js"></script>
-    <script src="static/lib/underscore.js"></script>
-    <script src="static/lib/backbone.js"></script>
-    <script src="static/lib/Backbone.CrossDomain.js"></script>
-    
+    <script src="static/lib/vue.js"></script>
     <script src="static/main.js"></script>
 </body>
 
