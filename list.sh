@@ -1,3 +1,3 @@
 #!/bin/sh
 
-tree -L 4 -I 'list.sh'
+tree -L 4 -I '*.pyc'
