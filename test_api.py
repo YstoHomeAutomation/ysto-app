@@ -3,10 +3,10 @@
 
 import unittest
 from webtest import TestApp
-import server
+import api
 import json
 
-app = TestApp(server.app)
+app = TestApp(api.app)
 
 class TestAPI(unittest.TestCase):
 
