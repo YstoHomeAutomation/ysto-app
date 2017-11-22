@@ -23,6 +23,7 @@ def about():
     """ Return a API name and version"""
     response.headers['Content-Type'] = 'application/json'
     response.headers['Cache-Control'] = 'no-cache'
+    response.headers['Access-Control-Request-Method'] = '*'
 
     return {'about': 'ysto-API', 'versao': '2.0.0'}
 

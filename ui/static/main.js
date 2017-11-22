@@ -1,3 +1,8 @@
+// cabeçalho com token de validação.
+Vue.http.headers.common['Authorization'] = 'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6W3siaWQiOjF9XX0.eetLj4DKGNshMe9uCZmtvOayZPFHva_PsrqANvG6pRI';
+var API='http://ysto.local:3001/api'
+//~ var API='http://192.168.10.101:3001/api'
+
 Vue.component('dash', {
     template:`
         <div>
@@ -45,14 +50,35 @@ Vue.component('new-user', {
           <div class="one-half column">
             <label for="PasswordInput">Password</label>
             <input class="u-full-width" type="password" id="PasswordInput">
-            <input class="button-primary u-full-width" type="submit" value="Save">
-            <input class="button u-full-width" type="submit" value="Logout">
+            <input class="button-primary u-full-width" v-on:click="aboutAPI" type="submit" value="Save">
+            <input class="button u-full-width" v-on:click="getDevices" type="submit" value="Logout">
           </div>
         </div>
       </form>
     </div>
     `,
-    props: ['currentView']
+    props: ['currentView'],
+    methods: {
+        aboutAPI: function(){
+            this.$http.get(API)
+            .then(result => {
+
+                if (result.status == 200) {
+                    console.log('SUCESSO GALERA!');
+                    console.log(result.data);
+                }
+            })
+        },
+        getDevices: function(){
+            this.$http.get('http://ysto.local:3001/api/devices')
+            .then(result => {
+                if (result.status == 200) {
+                    console.log('SUCESSO 2 GALERA!');
+                    console.log(result.data);
+                }
+            })
+        }
+    }
 });
 
 Vue.component('new-device', {
