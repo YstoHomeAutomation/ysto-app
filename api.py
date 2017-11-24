@@ -103,14 +103,14 @@ def users(id):
 
 @app.post('/api/users', auth=1)
 @json_to_params
-def create_user(id, name, password, email):
+def create_user(name, password, email):
     """ Create new user"""
     try:
-        data = u.new(id, name, password, email)
+        data = u.new(name, password, email)
     except:
         raise HTTPError(400, "SOMEVAR parameter is required!")
     
-    return data
+    #~ return 200
     
 @app.post('/api/users/<id>', auth=1)
 @json_to_params
@@ -135,4 +135,4 @@ def home():
 
 if __name__ == '__main__':
     #~ run(app, host='0.0.0.0', port=3001, debug=True)
-    run(app, host='0.0.0.0', port=3001)
+    run(app, host='192.168.10.101', port=3001)

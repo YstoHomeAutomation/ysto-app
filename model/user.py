@@ -18,20 +18,12 @@ class User(object):
         _user = self.db.query('select * from Users where id = ?', id)
         return json.dumps({u'users': list(_user)})
         
-    def new(self, id, name, password, email):
-        _user = self.db.query('select * from Users where id = ?', id)
-        
-        if _user:
-            raise ValueError
-        
+    def new(self, name, password, email):
         password = hashlib.md5(password).hexdigest()
-            
         _dev = self.db.execute("""
-            insert into Users(id, name, password, email, created_at, updated_at)
-            values(:id, :name, :password, :email, (?), (?))
-        """, id, name, password, email, datetime.now().strftime('%Y-%m%d %H:%M:%S'), datetime.now().strftime('%Y-%m%d %H:%M:%S'))
-            
-        return self.get(id)
+            insert into Users(name, password, email, created_at, updated_at)
+            values(:name, :password, :email, (?), (?))
+        """, name, password, email, datetime.now().strftime('%Y-%m%d %H:%M:%S'), datetime.now().strftime('%Y-%m%d %H:%M:%S'))
         
     def update(self, id, name, password, email):
     

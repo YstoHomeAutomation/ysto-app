@@ -1,7 +1,7 @@
 // cabeçalho com token de validação.
 Vue.http.headers.common['Authorization'] = 'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6W3siaWQiOjF9XX0.eetLj4DKGNshMe9uCZmtvOayZPFHva_PsrqANvG6pRI';
-var API='http://ysto.local:3001/api'
-//~ var API='http://192.168.10.101:3001/api'
+//~ var API='http://ysto.local:3001/api'
+var API='http://192.168.10.101:3001/api'
 
 Vue.component('dash', {
     template:`
@@ -43,14 +43,18 @@ Vue.component('new-user', {
       </div>
       <form>
         <div class="row">
-          <div class="one-half column">
+          <div class="one-third column">
+            <label for="NameInput">Your name</label>
+            <input class="u-full-width" type="text" placeholder="your name" id="NameInput">
+          </div>
+          <div class="one-third column">
             <label for="EmailInput">Your email</label>
             <input class="u-full-width" type="email" placeholder="your email" id="EmailInput">
           </div>
-          <div class="one-half column">
+          <div class="one-third column">
             <label for="PasswordInput">Password</label>
             <input class="u-full-width" type="password" id="PasswordInput">
-            <input class="button-primary u-full-width" v-on:click="aboutAPI" type="submit" value="Save">
+            <input class="button-primary u-full-width" v-on:click="sendUser" type="submit" value="Save">
             <input class="button u-full-width" v-on:click="getDevices" type="submit" value="Logout">
           </div>
         </div>
@@ -58,6 +62,7 @@ Vue.component('new-user', {
     </div>
     `,
     props: ['currentView'],
+    
     methods: {
         aboutAPI: function(){
             this.$http.get(API)
@@ -70,11 +75,30 @@ Vue.component('new-user', {
             })
         },
         getDevices: function(){
-            this.$http.get('http://ysto.local:3001/api/devices')
+            this.$http.get(API+'/devices')
             .then(result => {
                 if (result.status == 200) {
                     console.log('SUCESSO 2 GALERA!');
                     console.log(result.data);
+                }
+            })
+        },
+        sendUser: function() {
+            console.log('Teste de envio');
+            user = {
+                name:  NameInput.value,
+                email: EmailInput.value,
+                password: PasswordInput.value
+            }
+
+            console.log(user);
+
+            this.$http.post(API+'/users', user)
+            .then(result => {
+                if (result.status == 200) {
+                    console.log('Cadastro de usuario com sucesso');
+                } else {
+                    console.log('Falha no cadastro de usuario: ' + reult.status);
                 }
             })
         }
@@ -147,6 +171,7 @@ Vue.component('list-devices',{
 var app = new Vue({
   el: '#app',
   data: {
-    currentView: 'dash'
+    currentView: 'dash',
+    
   }
 });
