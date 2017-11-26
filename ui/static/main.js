@@ -2,6 +2,8 @@
 Vue.http.headers.common['Authorization'] = 'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6W3siaWQiOjF9XX0.eetLj4DKGNshMe9uCZmtvOayZPFHva_PsrqANvG6pRI';
 //~ var API='http://ysto.local:3001/api'
 var API='http://192.168.10.101:3001/api'
+Vue.config.debug = true;
+
 
 Vue.component('dash', {
     template:`
@@ -17,12 +19,12 @@ Vue.component('dash', {
                 <a class="button button-primary u-full-width" id="new-device" href="#" @click="changeView('new-device')">New device</a>
               </div>
               <div class="one-third column">
-                <a class="button button-primary u-full-width" id="devices" href="#" @click="changeView('list-devices')">Devices</a>
+                <a class="button button-primary u-full-width" id="btn-devices" href="#" @click="changeView('list-devices')">Devices</a>
               </div>
           </div>
           <div class="row">
               <div class="one-third column">
-                <a class="button u-full-width" id="logout" href="#">Logout</a>
+               <!-- <a class="button u-full-width" id="logout" href="#">Logout</a> -->
               </div>
           </div>
         </div>
@@ -55,7 +57,7 @@ Vue.component('new-user', {
             <label for="PasswordInput">Password</label>
             <input class="u-full-width" type="password" id="PasswordInput">
             <input class="button-primary u-full-width" v-on:click="sendUser" type="submit" value="Save">
-            <input class="button u-full-width" v-on:click="getDevices" type="submit" value="Logout">
+            <!-- <input class="button u-full-width" v-on:click="getDevices" type="submit" value="Logout"> -->
           </div>
         </div>
       </form>
@@ -115,17 +117,34 @@ Vue.component('new-device', {
         <div class="row">
           <div class="two-thirds column">
             <label for="NamelInput">Device name</label>
-            <input class="u-full-width" type="text" placeholder="Ex. MA006" id="NamelInput">
+            <input class="u-full-width" type="text" placeholder="Ex. MA006" id="DeviceName">
            </div>
           <div class="one-third column">
-            <input class="button-primary u-full-width" type="submit" value="Save">
-            <input class="button u-full-width" type="submit" value="Logout">
+            <input class="button-primary u-full-width" v-on:click="sendDevice" type="submit" value="Save">
+             <!-- <input class="button u-full-width" type="submit" value="Logout"> -->
           </div>
         </div>
       </form>
     </div>
   `,
-  props: ['currentView']
+  props: ['currentView'],
+  methods: {
+    sendDevice: function(){
+        device = {
+            description: DeviceName.value,
+            user_id: 1
+        };
+        
+        this.$http.post(API+'/devices', device)
+        .then(result => {
+            if (result.status == 200) {
+                console.log('Cadastro de dispositivo com sucesso');
+            } else {
+                console.log('Falha no cadastro de usuario: ' + reult.status);
+            }
+        })
+    }
+  }
 });
 
 Vue.component('list-devices',{
@@ -145,33 +164,71 @@ Vue.component('list-devices',{
             </thead>
             <tbody>
               <tr>
-                <td>MA001</td>
+                <td>MA002</td>
                 <td>ONLINE</td>
-                <td><a class="button button-primary" href="#">Switch</a></td>
+                <td><a class="button button-primary" v-on:click="switchON(2)" href="#">Switch</a></td>
               </tr>
               <tr>
                 <td>MA003</td>
-                <td>OFFLINE</td>
-                <td><a class="button button" href="#">Switch</a></td>
+                <td>ONLINE</td>
+                <td><a class="button button-primary" v-on:click="switchON(670)" href="#">Switch</a></td>
               </tr>
             </tbody>
           </table>
       </div>
       <div class="row">
         <div class="one-third column">
-          <input class="button u-full-width" type="submit" value="Logout">
+          <!-- <input class="button u-full-width" type="submit" value="Logout"> -->
+          <!-- <input class="button u-full-width" v-on:click="listDevices" type="submit" value="Logout"> -->
         </div>
       </div>
     </div>
-  `
+  `,
+    props: ['devices'],
+    
+    methods: {
+        listDevices: function(){
+            console.log(devices);
+        },
+        switchON: function(id) {
+          var state;
+        
+          this.$http.get(API+'/devices/'+id)
+          .then(result => {
+            if (result.status == 200) {
+              state = result.data.devices[0]['switch_on'];
+              if (state === 0) {
+                state = 1;
+              } else {
+                state = 0;
+              }
+            }
+            this.$http.put(API+'/devices/'+id, {switch_on:state})
+            .then(result => {
+              if (result.status == 200) {
+                console.log('Troquei estado');
+              }
+            })
+          })
+        }
+    }
 });
 
 
 // Ponto de entrada do app
 var app = new Vue({
   el: '#app',
-  data: {
+  data: () => ({
     currentView: 'dash',
-    
-  }
+    devices: []
+  }),
+  // Carrega a lista de dispositivos cadastrados
+  created: function() {
+    this.$http.get(API+'/devices')
+    .then(result => {
+      if (result.status == 200) {
+        devices = result.data.devices;
+      }
+    })
+  },
 });

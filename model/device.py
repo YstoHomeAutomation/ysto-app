@@ -24,18 +24,17 @@ class Device(object):
         _dev = self.db.query('select * from Devices where id = ?', id)
         return json.dumps({u'devices': list(_dev)})
         
-    def new(self, id, description, switch_on, on_line, user_id):
-        _dev = self.db.query('select * from Devices where id = ?', id)
-        
+    def new(self, description, user_id):
+        description = description.upper()
+        _dev = self.db.query("select * from Devices where description = :description", description)
         if _dev:
             raise ValueError
             
         _dev = self.db.execute("""
-            insert into Devices(id, description, switch_on, on_line, created_at, updated_at, user_id)
-            values(:id, :description, :switch_on, :on_line, (?), (?), :user_id)
-        """, id, description, switch_on, on_line, datetime.now().strftime('%Y-%m%d %H:%M:%S'), datetime.now().strftime('%Y-%m%d %H:%M:%S'), user_id)
+            insert into Devices(description, switch_on, on_line, created_at, updated_at, user_id)
+            values(:description, :switch_on, :on_line, (?), (?), :user_id)
+        """, description, 0, 0, datetime.now().strftime('%Y-%m%d %H:%M:%S'), datetime.now().strftime('%Y-%m%d %H:%M:%S'), user_id)
             
-        return self.get(id)
         
     def update(self, id, description, switch_on, on_line):
         _dev = self.db.execute("""

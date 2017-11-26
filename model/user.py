@@ -19,8 +19,14 @@ class User(object):
         return json.dumps({u'users': list(_user)})
         
     def new(self, name, password, email):
+        email = email.lower()
+        _user = self.db.query('select * from Users where email = ?', email)
+        
+        if _user:
+            raise ValueError
+    
         password = hashlib.md5(password).hexdigest()
-        _dev = self.db.execute("""
+        _user = self.db.execute("""
             insert into Users(name, password, email, created_at, updated_at)
             values(:name, :password, :email, (?), (?))
         """, name, password, email, datetime.now().strftime('%Y-%m%d %H:%M:%S'), datetime.now().strftime('%Y-%m%d %H:%M:%S'))

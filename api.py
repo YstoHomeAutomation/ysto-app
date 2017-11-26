@@ -58,14 +58,14 @@ def devices(id):
     
 @app.post('/api/devices', auth=1)
 @json_to_params
-def create_device(id, description, switch_on, on_line, user_id):
-    """ Create a device by ID"""
+def create_device(description, user_id):
+    """ Create a device"""
     try:
-        data = dev.new(id, description, switch_on, on_line, user_id)
+        data = dev.new(description, user_id)
     except:
         raise HTTPError(400, "'somevar' parameter is required!")
     
-    return data
+    return {'status': 'SUCCESS'}
     
 @app.post('/api/devices/<id>', auth=1)
 @json_to_params
@@ -110,7 +110,7 @@ def create_user(name, password, email):
     except:
         raise HTTPError(400, "SOMEVAR parameter is required!")
     
-    #~ return 200
+    return {'status': 'SUCCESS'}
     
 @app.post('/api/users/<id>', auth=1)
 @json_to_params
@@ -135,4 +135,4 @@ def home():
 
 if __name__ == '__main__':
     #~ run(app, host='0.0.0.0', port=3001, debug=True)
-    run(app, host='192.168.10.101', port=3001)
+    run(app, host='192.168.10.101', port=3001, debug=True)
