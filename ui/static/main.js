@@ -41,7 +41,7 @@ Vue.component('new-user', {
   template: `
     <div>
       <div class="row">
-          <h5>New User</h5>
+        <h5>New User</h5>
       </div>
       <form>
         <div class="row">
@@ -163,15 +163,13 @@ Vue.component('list-devices',{
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>MA002</td>
-                <td>ONLINE</td>
-                <td><a class="button button-primary" v-on:click="switchON(2)" href="#">Switch</a></td>
-              </tr>
-              <tr>
-                <td>MA003</td>
-                <td>ONLINE</td>
-                <td><a class="button button-primary" v-on:click="switchON(670)" href="#">Switch</a></td>
+              <tr v-for="device in devices" :key="device.id">
+                <td> {{ device.description }} </td>
+                
+                <td v-if="device.on_line === 0"> <strike>OFFLINE</strike> </td>
+                <td v-if="device.on_line === 1"> <strike>ONLINE</strike> </td>
+                
+                <td> <a class="button button-primary" v-on:click="switchON(device.id)" href="#">Switch</a> </td>
               </tr>
             </tbody>
           </table>
@@ -184,51 +182,53 @@ Vue.component('list-devices',{
       </div>
     </div>
   `,
-    props: ['devices'],
-    
-    methods: {
-        listDevices: function(){
-            console.log(devices);
-        },
-        switchON: function(id) {
-          var state;
-        
-          this.$http.get(API+'/devices/'+id)
-          .then(result => {
-            if (result.status == 200) {
-              state = result.data.devices[0]['switch_on'];
-              if (state === 0) {
-                state = 1;
-              } else {
-                state = 0;
-              }
-            }
-            this.$http.put(API+'/devices/'+id, {switch_on:state})
-            .then(result => {
-              if (result.status == 200) {
-                console.log('Troquei estado');
-              }
-            })
-          })
-        }
-    }
-});
-
-
-// Ponto de entrada do app
-var app = new Vue({
-  el: '#app',
-  data: () => ({
-    currentView: 'dash',
-    devices: []
-  }),
+  data: function(){
+    return {
+      devices: '',
+    };
+  },
   // Carrega a lista de dispositivos cadastrados
   created: function() {
     this.$http.get(API+'/devices')
     .then(result => {
       if (result.status == 200) {
-        devices = result.data.devices;
+        this.devices = result.data.devices;
       }
     })
   },
+    
+  methods: {
+    listDevices: function(){
+        console.log(devices);
+    },
+    switchON: function(id) {
+      var state;
+    
+      this.$http.get(API+'/devices/'+id)
+      .then(result => {
+        if (result.status == 200) {
+          state = result.data.devices[0]['switch_on'];
+          if (state === 0) {
+            state = 1;
+          } else {
+            state = 0;
+          }
+        }
+        this.$http.put(API+'/devices/'+id, {switch_on:state})
+        .then(result => {
+          if (result.status == 200) {
+            console.log('Troquei estado');
+          }
+        })
+      })
+    }
+  }
+});
+
+// Ponto de entrada do app
+var app = new Vue({
+  el: '#app',
+  data: {
+    currentView: 'dash'
+  }
 });

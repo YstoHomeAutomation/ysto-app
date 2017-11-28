@@ -78,3 +78,9 @@ class Device(object):
             raise ValueError
         
         return data
+
+    def is_online(self):
+      # TODO: Implementar um maneira de monitorar quais dispositivos
+      # estão online com o broker, usar isso para atualizar o campo
+      # on_line do banco de dados(usar isso dentro de um timer)
+      pass
