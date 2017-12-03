@@ -12,13 +12,10 @@ Vue.component('dash', {
               <h5>Dashboard</h5>
           </div>
             <div class="row">
-              <div class="one-third column" >
-                <a class="button button-primary u-full-width" id="new-user" href="#" @click="changeView('new-user')">New user</a>
-              </div>
-              <div class="one-third column">
+              <div class="one-half column">
                 <a class="button button-primary u-full-width" id="new-device" href="#" @click="changeView('new-device')">New device</a>
               </div>
-              <div class="one-third column">
+              <div class="one-half column">
                 <a class="button button-primary u-full-width" id="btn-devices" href="#" @click="changeView('list-devices')">Devices</a>
               </div>
           </div>
@@ -121,7 +118,6 @@ Vue.component('new-device', {
            </div>
           <div class="one-third column">
             <input class="button-primary u-full-width" v-on:click="sendDevice" type="submit" value="Save">
-             <!-- <input class="button u-full-width" type="submit" value="Logout"> -->
           </div>
         </div>
       </form>
@@ -138,9 +134,9 @@ Vue.component('new-device', {
         this.$http.post(API+'/devices', device)
         .then(result => {
             if (result.status == 200) {
-                console.log('Cadastro de dispositivo com sucesso');
+                alert('Cadastrado com sucesso');
             } else {
-                console.log('Falha no cadastro de usuario: ' + reult.status);
+                alert('Falha no cadastro: ' + reult.status);
             }
         })
     }
@@ -158,17 +154,14 @@ Vue.component('list-devices',{
             <thead>
               <tr>
                 <th>Device</th>
-                <th>Status</th>
-                <th>Action</th>
+                <th>Delete</th>
+                <th>Switch</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="device in devices" :key="device.id">
                 <td> {{ device.description }} </td>
-                
-                <td v-if="device.on_line === 0"> <strike>OFFLINE</strike> </td>
-                <td v-if="device.on_line === 1"> <strike>ONLINE</strike> </td>
-                
+                <td><a class="button button" v-on:click="deleteDevice(device.id)" href="#">Remove</a></td>
                 <td> <a class="button button-primary" v-on:click="switchON(device.id)" href="#">Switch</a> </td>
               </tr>
             </tbody>
@@ -221,7 +214,15 @@ Vue.component('list-devices',{
           }
         })
       })
-    }
+    },
+    deleteDevice: function(id){
+      this.$http.delete(API+'/devices/'+id)
+      .then(result => {
+        if (result.status == 200) {
+          alert('Removido com sucesso');
+        }
+      })
+    },
   }
 });
 
